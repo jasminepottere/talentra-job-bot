@@ -1,6 +1,4 @@
 from flask import Flask, request, jsonify
-from linkedin_bot import run_bot  # make sure this script exists and is correct
-
 app = Flask(__name__)
 
 @app.route('/apply', methods=['POST'])
@@ -8,19 +6,22 @@ def apply():
     data = request.json
     print("Received preferences:", data)
 
-    try:
-        # Trigger real scraping logic
-        jobs = run_bot(
-            keywords=data.get("keywords", ""),
-            location=data.get("location", ""),
-            salary=data.get("salary", ""),
-            remote_only=data.get("remoteOnly", False)
-        )
+    jobs = [
+        {
+            "title": "Frontend Developer",
+            "company": "Google",
+            "location": data.get("location", "Remote"),
+            "salary": data.get("salary", "$120k+")
+        },
+        {
+            "title": "Product Manager",
+            "company": "Netflix",
+            "location": data.get("location", "Remote"),
+            "salary": data.get("salary", "$140k+")
+        }
+    ]
 
-        return jsonify({"status": "success", "jobs": jobs})
-    except Exception as e:
-        print("Error:", e)
-        return jsonify({"status": "error", "message": str(e)}), 500
+    return jsonify({"status": "success", "jobs": jobs})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
