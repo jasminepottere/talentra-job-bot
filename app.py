@@ -1,47 +1,27 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
-
 app = Flask(__name__)
-CORS(app)  # Allow Webflow to fetch from here
 
-@app.route('/webhook', methods=['POST'])
-def webhook():
+@app.route('/apply', methods=['POST'])
+def apply():
     data = request.json
-    print("✅ Received form data:", data)
-    # 🔁 You can run your LinkedIn bot here with this data
-    return {"status": "received"}
+    print("Received preferences:", data)
 
-@app.route('/get-jobs', methods=['GET'])
-def get_jobs():
-    mock_jobs = [
+    # Return mock job results
+    jobs = [
         {
-            "id": 1,
-            "title": "UX Designer",
-            "company": "Figma",
-            "location": "Remote",
-            "salary": "$110K–$135K",
-            "tags": ["Remote", "Design", "Figma"]
+            "title": "Frontend Developer",
+            "company": "Google",
+            "location": data.get("location", "Remote"),
+            "salary": data.get("salary", "$120k+")
         },
         {
-            "id": 2,
             "title": "Product Manager",
-            "company": "Notion",
-            "location": "New York",
-            "salary": "$130K–$160K",
-            "tags": ["Hybrid", "PM", "Notion"]
-        },
-        {
-            "id": 3,
-            "title": "Frontend Engineer",
-            "company": "Airbnb",
-            "location": "San Francisco",
-            "salary": "$150K–$180K",
-            "tags": ["React", "Remote", "Frontend"]
+            "company": "Netflix",
+            "location": data.get("location", "Remote"),
+            "salary": data.get("salary", "$140k+")
         }
     ]
-    return jsonify(mock_jobs)
+    return jsonify({"status": "success", "jobs": jobs})
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-# added get-jobs route
-
