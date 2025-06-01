@@ -6,6 +6,7 @@ def apply():
     data = request.json
     print("Received preferences:", data)
 
+    # Simulated job results
     jobs = [
         {
             "title": "Frontend Developer",
